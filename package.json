@@ -1,0 +1,22 @@
+{
+  "name": "nudge_asana_app",
+  "version": "0.0.1",
+  "description": "asana compatible applcation for project report",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luterin/NUDGE_Asana_App.git"
+  },
+  "author": "Changwoo Chung",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luterin/NUDGE_Asana_App/issues"
+  },
+  "homepage": "https://github.com/luterin/NUDGE_Asana_App#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
