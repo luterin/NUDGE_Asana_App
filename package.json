@@ -1,0 +1,25 @@
+{
+  "name": "nudge_asana_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luterin/NUDGE_Asana_App.git"
+  },
+  "author": "Changwoo Chung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luterin/NUDGE_Asana_App/issues"
+  },
+  "homepage": "https://github.com/luterin/NUDGE_Asana_App#readme",
+  "dependencies": {
+    "asana": "^0.15.1",
+    "async": "^2.6.0",
+    "express": "^4.16.3",
+    "officegen": "^0.4.5"
+  }
+}
