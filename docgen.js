@@ -1,4 +1,4 @@
-module.exports.doc = function(lastWeek, thisWeek){
+module.exports.gen = function(lastWeek, thisWeek, callback){
 
   var async = require ( 'async' );
   var officegen = require('officegen');
@@ -35,10 +35,43 @@ module.exports.doc = function(lastWeek, thisWeek){
   pObj.addLineBreak ();
   pObj.addText ( 'My PERSONAL contribution to the project in the last week was:', { font_face: 'Arial', font_size: 10 });
 
+  // Generate Last week's tasks
+  // Details at README.md
+  for(i=0; i < Object.keys(lastWeek).length - 1; i++) {
+    var pObj = docx.createP ();
+    pObj.addText (" " + lastWeek[i].name, { font_face: 'Arial', font_size: 12, bold: true});
+    pObj.addLineBreak ();
+    var tmp = lastWeek[i].notes.split('\n');
+    for (j = 0; j < tmp.length ; j++) {
+      //console.log(tmp[j]);
+      pObj.addText (" " + tmp[j], { font_face: 'Arial', font_size: 10 });
+      pObj.addLineBreak ();
+    }
+  }
+  // Generate Last week's tasks
+  // Details at README.md
+  var pObj = docx.createP ();
+  pObj.addText ( '  My PERSONAL contribution to the project next week will be to:', { font_face: 'Arial', font_size: 10 });
+  pObj.addLineBreak ();
+  pObj.addLineBreak ();
+
+  for(i=0; i < Object.keys(thisWeek).length - 1; i++) {
+    pObj.addText (" " + thisWeek[i].name, { font_face: 'Arial', font_size: 12, bold: true});
+    pObj.addLineBreak ();
+    var tmp = lastWeek[i].notes.split('\n');
+    for (j = 0; j < tmp.length ; j++) {
+      console.log(tmp[j]);
+      pObj.addText (" " + tmp[j], { font_face: 'Arial', font_size: 10 });
+      pObj.addLineBreak ();
+    }
+    pObj.addLineBreak ();
+    pObj.addLineBreak ();
+  }
+
   docx.putPageBreak ();
 
   var out = fs.createWriteStream ( 'tmp/out.docx' );
-
+  filePath = 'tmp/out.docx';
   out.on ( 'error', function ( err ) {
   	console.log ( err );
   });
@@ -50,13 +83,15 @@ module.exports.doc = function(lastWeek, thisWeek){
   			done ( null );
   		});
   		docx.generate ( out );
+
   	}
 
   ], function ( err ) {
   	if ( err ) {
   		console.log ( 'error: ' + err );
   	} // Endif.
+    callback(null, filePath);
   });
 
-  return filePath;
+
 };

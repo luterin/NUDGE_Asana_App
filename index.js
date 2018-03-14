@@ -32,9 +32,6 @@ var async = require('async');
 var docgen = require('./docgen.js');
 var asana = require('./asanaAPI.js');
 var app = express();
-var list;
-var taskCurrList, taskLastList;
-var err;
 app.get('/CW', function (req, res) {
   // Async waterfall test.. it might not work as a proper way
   async.waterfall([
@@ -44,11 +41,9 @@ app.get('/CW', function (req, res) {
     // Get tasks which are supposed to be done last week.
     // Does not matter if it's status is done or undone.
     asana.thisWeek,
-    function (lastWeek, thisWeek, callback) {
-      console.log("Now generate doc file.");
-      docgen.doc(lastWeek, thisWeek);
-      callback('success doc gen!');
-    }],
+    // Generate actual word 2007 file (it may be a legacy version, but still works O.K.)
+    docgen.gen,
+    ],
 
     // when all the query from 'asana.com' done via api, generate doc file.
     function(err, result) {
@@ -56,10 +51,12 @@ app.get('/CW', function (req, res) {
         console.log(err);
       }
       console.log(result);
+      res.download('tmp/out.docx');
     });
-    res.send('');
 });
 
+
+app.use(express.static('tmp'));
 
 app.listen(8001, function () {
   console.log('Asana app listening on port 8001!');

@@ -54,8 +54,7 @@ module.exports.thisWeek = function(lastList, callback){
       return response.data;
     })
     .filter(function(task) {
-      return task.assignee_status === 'upcoming' ||
-        task.assignee_status === 'new';
+      return task.completed === 'true'
     })
     .then(function(list) {
       console.log(util.inspect(list, {
