@@ -1,4 +1,4 @@
-# NUDGE_Asana_App
+# WeeklyLog_Autogen
   This Application is for Students in Department of Smart Manufacturing Systems and Design Engineering, Seoultech
   Automatically generate weekly logs for Convergence Project.
   
