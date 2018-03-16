@@ -32,15 +32,20 @@ var async = require('async');
 var docgen = require('./docgen.js');
 var asana = require('./asanaAPI.js');
 var app = express();
+global.who = null;
 app.get('/CW', function (req, res) {
   // Async waterfall test.. it might not work as a proper way
+  global.who = "CW";
   async.waterfall([
 
     // Get tasks to be done in a week.
-    asana.lastWeek,
     // Get tasks which are supposed to be done last week.
     // Does not matter if it's status is done or undone.
-    asana.thisWeek,
+    asana.taskAPI,
+/*
+    This will never user again;
+    // asana.thisWeekAll,
+ */
     // Generate actual word 2007 file (it may be a legacy version, but still works O.K.)
     docgen.gen,
     ],
@@ -54,7 +59,32 @@ app.get('/CW', function (req, res) {
       res.download('tmp/out.docx');
     });
 });
+app.get('/NP', function (req, res) {
+  // Async waterfall test.. it might not work as a proper way
+  global.who = "NP";
+  async.waterfall([
 
+    // Get tasks to be done in a week.
+    // Get tasks which are supposed to be done last week.
+    // Does not matter if it's status is done or undone.
+    asana.taskAPI,
+/*
+    This will never user again;
+    // asana.thisWeekAll,
+ */
+    // Generate actual word 2007 file (it may be a legacy version, but still works O.K.)
+    docgen.gen,
+    ],
+
+    // when all the query from 'asana.com' done via api, generate doc file.
+    function(err, result) {
+      if(err) {
+        console.log(err);
+      }
+      console.log(result);
+      res.download('tmp/out.docx');
+    });
+});
 
 app.use(express.static('tmp'));
 

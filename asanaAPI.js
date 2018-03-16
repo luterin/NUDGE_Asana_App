@@ -1,40 +1,38 @@
-module.exports.lastWeek = function(callback){
+module.exports.taskAPI = function(callback){
   var Asana = require('asana');
   var util = require('util');
-  var client = Asana.Client.create().useAccessToken('0/aca9749ae819383d232bc2c3ffc81ff7');
+  var userAccessToken = (who == 'CW' ? '0/aca9749ae819383d232bc2c3ffc81ff7'  : 'TODO: constant');
+  var client = Asana.Client.create().useAccessToken(userAccessToken);
   client.users.me()
     .then(function(user) {
       var userId = user.id;
-      var workspaceId = user.workspaces[0].id;
-      console.log("asanaAPI: work on last week!");
+      var workspaceId = "588624289895326";
+      var projectId = "591181310201199";
       return client.tasks.findAll({
         assignee: userId,
         workspace: workspaceId,
-        opt_fields: 'id,name,assignee_status,completed,notes'
-
+        projects: projectId,
+        opt_fields: 'id,name,assignee,assignee_status,completed,notes,due_on'
       });
     })
     .then(function(response) {
       return response.data;
     })
+/*  Filter off.. tasks will be filterd at "docgen.js"
     .filter(function(task) {
-      return task.assignee_status === 'upcoming' ||
-        task.assignee_status === 'new';
+      return task.assignee_status === 'upcoming';
     })
+ */
     .then(function(list) {
-      console.log(util.inspect(list, {
-        colors: true,
-        depth: null
-      }));
       return list;
-    }).then(function(lastList){
-      console.log("asanaAPI callback test 1:" + lastList);
-      callback(null, lastList);
+    }).then(function(allJob){
+      console.log("asanaAPI callback test :" + allJob);
+      callback(null, allJob);
     });
 
 };
-
-module.exports.thisWeek = function(lastList, callback){
+/* algorithm has changed. Not gonna use it for a while.
+module.exports.thisWeekAll = function(lastList, callback){
   var Asana = require('asana');
   var util = require('util');
   var client = Asana.Client.create().useAccessToken('0/aca9749ae819383d232bc2c3ffc81ff7');
@@ -42,7 +40,6 @@ module.exports.thisWeek = function(lastList, callback){
     .then(function(user) {
       var userId = user.id;
       var workspaceId = user.workspaces[0].id;
-      console.log("asanaAPI: work on this week!");
       return client.tasks.findAll({
         assignee: userId,
         workspace: workspaceId,
@@ -54,16 +51,13 @@ module.exports.thisWeek = function(lastList, callback){
       return response.data;
     })
     .filter(function(task) {
-      return task.completed === 'true'
+      return task.completed === 'true';
     })
     .then(function(list) {
-      console.log(util.inspect(list, {
-        colors: true,
-        depth: null
-      }));
       return list;
     }).then(function(thisList){
       console.log("asanaAPI callback test2 :" + thisList);
       callback(null, lastList, thisList);
     });
 };
+*/

@@ -1,24 +1,62 @@
-module.exports.gen = function(lastWeek, thisWeek, callback){
+module.exports.gen = function(allJob, callback){
 
   var async = require ( 'async' );
   var officegen = require('officegen');
-  var filePath;
+  var dates = require('date-utils');
   var fs = require('fs');
   var path = require('path');
-  var name = "정  창 우";
+/* Variables for reports
+ * Hard coded Because I'm so damn lazy
+ */
+  var filePath;
   var groupName = " 장  건,  정  창 우";
+  var taskNum = Object.keys(allJob).length;
+  var lastWeek = [], thisWeek = [];
+  var lastNum = 0;
+  var thisNum = 0;
+  var name = (allJob[0].assignee.id == 588624251133509) ? "정  창 우" :  "장  건";
+  var today = new Date();
 
+  function getWeekNum() {
+    var refDate = new Date(2018, 2, 12, 0, 0, 0, 0);
+    var diffDate = (today.getTime() - refDate.getTime()) / (1000*60*60*24);
+    return (Math.floor(diffDate / 7) + 1);
+  }
 
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
   var docx = officegen ({
   	type: 'docx',
   	orientation: 'portrait',
   	pageMargins: { top: 1000, left: 1000, bottom: 1000, right: 1000 }
   });
 
+
   docx.on ( 'error', function ( err ) {
   			console.log ( err );
   		});
-
+  for (x = 0; x < taskNum; x++) {
+      if( (new Date(allJob[x].due_on) < today) && allJob[x].name != '' ) {
+        lastWeek[lastNum] = allJob[x];
+        lastNum++;
+      }
+      else if( (new Date(allJob[x].due_on) > today) && allJob[x].name != '') {
+        thisWeek[thisNum] = allJob[x];
+        thisNum++;
+      }
+      else {
+        console.log("docgen: Task Filter error! Maybe there are abnormal state tasks" );
+      }
+  }
   var pObj = docx.createP ();
   pObj.addText ( 'Convergence Project Progress Report Form' , { font_face: 'Arial', font_size: 16 });
   pObj.addLineBreak ();
@@ -26,7 +64,7 @@ module.exports.gen = function(lastWeek, thisWeek, callback){
   var pObj = docx.createP ();
   pObj.addLineBreak ();
 
-  pObj.addText ( 'Meeting Date :                Week Number : ', { font_face: 'Arial', font_size: 10 });
+  pObj.addText ( 'Meeting Date : ' + formatDate(today) + '            Week Number : ' + getWeekNum(), { font_face: 'Arial', font_size: 10 });
   var pObj = docx.createP ();
   pObj.addText ( 'Name :    ' + name, { font_face: 'Arial', font_size: 10 });
   var pObj = docx.createP ();
@@ -37,7 +75,7 @@ module.exports.gen = function(lastWeek, thisWeek, callback){
 
   // Generate Last week's tasks
   // Details at README.md
-  for(i=0; i < Object.keys(lastWeek).length - 1; i++) {
+  for(i=0; i < lastNum; i++) {
     var pObj = docx.createP ();
     pObj.addText (" " + lastWeek[i].name, { font_face: 'Arial', font_size: 12, bold: true});
     pObj.addLineBreak ();
@@ -45,6 +83,16 @@ module.exports.gen = function(lastWeek, thisWeek, callback){
     for (j = 0; j < tmp.length ; j++) {
       //console.log(tmp[j]);
       pObj.addText (" " + tmp[j], { font_face: 'Arial', font_size: 10 });
+      pObj.addLineBreak ();
+    }
+    pObj.addText (" Due Date:" + lastWeek[i].due_on, { font_face: 'Arial', font_size: 7, bold: true });
+    pObj.addLineBreak ();
+    if(thisWeek[i].completed == false) {
+      pObj.addText (" Is Completed:" + lastWeek[i].completed, { font_face: 'Arial', font_size: 7, bold: true, color: 'ff0000'});
+      pObj.addLineBreak ();
+    }
+    else {
+      pObj.addText (" Is Completed:" + lastWeek[i].completed, { font_face: 'Arial', font_size: 7, bold: true});
       pObj.addLineBreak ();
     }
   }
@@ -55,17 +103,25 @@ module.exports.gen = function(lastWeek, thisWeek, callback){
   pObj.addLineBreak ();
   pObj.addLineBreak ();
 
-  for(i=0; i < Object.keys(thisWeek).length - 1; i++) {
+  for(i=0; i < thisNum; i++) {
     pObj.addText (" " + thisWeek[i].name, { font_face: 'Arial', font_size: 12, bold: true});
     pObj.addLineBreak ();
-    var tmp = lastWeek[i].notes.split('\n');
+    var tmp = thisWeek[i].notes.split('\n');
     for (j = 0; j < tmp.length ; j++) {
-      console.log(tmp[j]);
+      //console.log(tmp[j]);
       pObj.addText (" " + tmp[j], { font_face: 'Arial', font_size: 10 });
       pObj.addLineBreak ();
     }
+    pObj.addText (" Due Date:" + thisWeek[i].due_on, { font_face: 'Arial', font_size: 7, bold: true });
     pObj.addLineBreak ();
-    pObj.addLineBreak ();
+    if(thisWeek[i].completed == false) {
+      pObj.addText (" Is Completed:" + thisWeek[i].completed, { font_face: 'Arial', font_size: 7, bold: true, color: 'ff0000'});
+      pObj.addLineBreak ();
+    }
+    else {
+      pObj.addText (" Is Completed:" + thisWeek[i].completed, { font_face: 'Arial', font_size: 7, bold: true});
+      pObj.addLineBreak ();
+    }
   }
 
   docx.putPageBreak ();
@@ -92,6 +148,5 @@ module.exports.gen = function(lastWeek, thisWeek, callback){
   	} // Endif.
     callback(null, filePath);
   });
-
 
 };
