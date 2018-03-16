@@ -10,15 +10,15 @@
   It might work with AWS free-teir or so.
   
 # How to use it
-![example](./Image/example.jpeg)
+![example](./Image/example.jpg)
   Above image is an sample result of Weekly_Autogen.
   
   You need to change some features.. such as userAccessToken.
   Refer Below Image to get one! 
   If you have further question, contact me at luterin@luterin.com
   
-![howto](./Image/ProfileSettings.jpeg)
-![howto](./Image/AccessToken.jpeg)
+![howto](./Image/ProfileSettings.jpg)
+![howto](./Image/AccessToken.jpg)
 
 # License
   3-clasue BSD
