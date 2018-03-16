@@ -6,11 +6,14 @@
   
 # Requirement
   Use https://Asana.com for Project Management.
+  
   Need NodeJS Server somewhere. This applciation require only very low computing power. 
+  
   It might work with AWS free-teir or so.
   
 # How to use it
 ![example](./Image/example.jpg)
+
   Above image is an sample result of Weekly_Autogen.
   
   You need to change some features.. such as userAccessToken.
