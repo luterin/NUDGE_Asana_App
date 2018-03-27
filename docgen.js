@@ -14,7 +14,7 @@ module.exports.gen = function(allJob, callback){
   var lastWeek = [], thisWeek = [];
   var lastNum = 0;
   var thisNum = 0;
-  var name = (allJob[0].assignee.id == 588624251133509) ? "정  창 우" :  "장  건";
+  var name = (global.who == "CW") ? "정창우" :  "장건";
   var today = new Date();
 
   function getWeekNum() {
@@ -45,12 +45,15 @@ module.exports.gen = function(allJob, callback){
   			console.log ( err );
   		});
   for (x = 0; x < taskNum; x++) {
+    //(allJob[x].completed == false)
       if( (new Date(allJob[x].due_on) < today) && allJob[x].name != '' ) {
         lastWeek[lastNum] = allJob[x];
+        console.log(laskWeek[laskNum].notes);
         lastNum++;
       }
       else if( (new Date(allJob[x].due_on) > today) && allJob[x].name != '') {
         thisWeek[thisNum] = allJob[x];
+        console.log(thiskWeek[thisNum].notes);
         thisNum++;
       }
       else {
@@ -87,7 +90,7 @@ module.exports.gen = function(allJob, callback){
     }
     pObj.addText (" Due Date:" + lastWeek[i].due_on, { font_face: 'Arial', font_size: 7, bold: true });
     pObj.addLineBreak ();
-    if(thisWeek[i].completed == false) {
+    if(lastWeek[i].completed == false) {
       pObj.addText (" Is Completed:" + lastWeek[i].completed, { font_face: 'Arial', font_size: 7, bold: true, color: 'ff0000'});
       pObj.addLineBreak ();
     }
@@ -123,11 +126,26 @@ module.exports.gen = function(allJob, callback){
       pObj.addLineBreak ();
     }
   }
+  var pObj = docx.createP ();
+  pObj.addLineBreak ();
+  pObj.addText (" As of today, the teamwork within my group is:", { font_face: 'Arial', font_size: 11, bold: true});
+  pObj.addLineBreak ();
+  var pObj = docx.createP ();
+  pObj.addText (" 	Excellent", { font_face: 'Arial', font_size: 11, bold: true});
+  pObj.addLineBreak ();
+  pObj.addText (" 	Good", { font_face: 'Arial', font_size: 11, bold: true});
+  pObj.addLineBreak ();
+  pObj.addText (" 	Okay", { font_face: 'Arial', font_size: 11, bold: true});
+  pObj.addLineBreak ();
+  pObj.addText (" 	Deteriorating.", { font_face: 'Arial', font_size: 11, bold: true});
+  pObj.addLineBreak ();
+  pObj.addText (" 	Poor.", { font_face: 'Arial', font_size: 11, bold: true});
+  var pObj = docx.createP ();
+  pObj.addLineBreak ();
+  pObj.addText (" Instructor use only:  Project log initialed", { font_face: 'Arial', font_size: 11, bold: true});
+  global.docFilePath = 'tmp/(NUDGE)Weekly_Log_' + getWeekNum() + "주차_" + name + ".docx";
+  var out = fs.createWriteStream ( global.docFilePath );
 
-  docx.putPageBreak ();
-
-  var out = fs.createWriteStream ( 'tmp/out.docx' );
-  filePath = 'tmp/out.docx';
   out.on ( 'error', function ( err ) {
   	console.log ( err );
   });

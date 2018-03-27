@@ -1,11 +1,14 @@
 module.exports.taskAPI = function(callback){
   var Asana = require('asana');
   var util = require('util');
-  var userAccessToken = (who == 'CW' ? '0/aca9749ae819383d232bc2c3ffc81ff7'  : 'TODO: constant');
+
+  var userAccessToken = (who == 'CW' ? '0/aca9749ae819383d232bc2c3ffc81ff7'  : '0/a5e2e2dce33c1c404b20e22d14109837');
+
   var client = Asana.Client.create().useAccessToken(userAccessToken);
   client.users.me()
     .then(function(user) {
       var userId = user.id;
+      console.log(user.id);
       var workspaceId = "588624289895326";
       var projectId = "591181310201199";
       return client.tasks.findAll({
@@ -18,11 +21,12 @@ module.exports.taskAPI = function(callback){
     .then(function(response) {
       return response.data;
     })
-/*  Filter off.. tasks will be filterd at "docgen.js"
+/*  Filter off.. tasks will be filterd at "docgen.js"  */
     .filter(function(task) {
-      return task.assignee_status === 'upcoming';
+      return task.assignee_status === 'upcoming' ||
+      task.assignee_status === 'new';
     })
- */
+
     .then(function(list) {
       return list;
     }).then(function(allJob){

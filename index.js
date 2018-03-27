@@ -33,6 +33,7 @@ var docgen = require('./docgen.js');
 var asana = require('./asanaAPI.js');
 var app = express();
 global.who = null;
+global.docFilePath = null
 app.get('/CW', function (req, res) {
   // Async waterfall test.. it might not work as a proper way
   global.who = "CW";
@@ -55,8 +56,7 @@ app.get('/CW', function (req, res) {
       if(err) {
         console.log(err);
       }
-      console.log(result);
-      res.download('tmp/out.docx');
+      res.download(global.docFilePath);
     });
 });
 app.get('/NP', function (req, res) {
@@ -81,8 +81,7 @@ app.get('/NP', function (req, res) {
       if(err) {
         console.log(err);
       }
-      console.log(result);
-      res.download('tmp/out.docx');
+      res.download(global.docFilePath);
     });
 });
 
