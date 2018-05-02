@@ -48,7 +48,7 @@ module.exports.gen = function(allJob, callback){
     //(allJob[x].completed == false)
       if( (new Date(allJob[x].due_on) < today) && allJob[x].name != '' ) {
         lastWeek[lastNum] = allJob[x];
-        console.log(laskWeek[laskNum].notes);
+        console.log(lastWeek[lastNum].notes);
         lastNum++;
       }
       else if( (new Date(allJob[x].due_on) > today) && allJob[x].name != '') {

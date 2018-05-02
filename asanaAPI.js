@@ -21,12 +21,12 @@ module.exports.taskAPI = function(callback){
     .then(function(response) {
       return response.data;
     })
-/*  Filter off.. tasks will be filterd at "docgen.js"  */
+/*  Filter off.. tasks will be filterd at "docgen.js"
     .filter(function(task) {
       return task.assignee_status === 'upcoming' ||
       task.assignee_status === 'new';
     })
-
+*/
     .then(function(list) {
       return list;
     }).then(function(allJob){
